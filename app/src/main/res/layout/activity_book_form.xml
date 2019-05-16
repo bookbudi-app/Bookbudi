@@ -1,0 +1,139 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BookForm">
+
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/tick"
+        android:src="@drawable/tick"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="12dp"
+        android:id="@+id/scrollView"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:scrollbars="none">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/gallery"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/gallery"
+                    />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/bookPhoto"
+                    android:background="@drawable/image_background"
+                    android:scaleType="centerCrop"/>
+
+            </RelativeLayout>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/bookName"
+                android:background="@drawable/edit_text"
+                android:layout_marginTop="15dp"
+                android:hint="Book name"
+                android:paddingLeft="12dp"
+                android:paddingRight="4dp"
+                tools:ignore="HardcodedText"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/subject"
+                android:background="@drawable/edit_text"
+                android:layout_marginTop="15dp"
+                android:hint="Subject"
+                android:paddingLeft="12dp"
+                android:paddingRight="4dp"
+                tools:ignore="HardcodedText"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="15dp"
+                android:id="@+id/category"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/grade"
+                android:background="@drawable/edit_text"
+                android:layout_marginTop="15dp"
+                android:hint="Grade"
+                android:paddingLeft="12dp"
+                android:paddingRight="4dp"
+                tools:ignore="HardcodedText"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/city"
+                android:background="@drawable/edit_text"
+                android:layout_marginTop="15dp"
+                android:hint="City"
+                android:paddingLeft="12dp"
+                android:paddingRight="4dp"
+                tools:ignore="HardcodedText"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/price"
+                android:background="@drawable/edit_text"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="60dp"
+                android:hint="Price"
+                android:paddingLeft="12dp"
+                android:paddingRight="4dp"
+                tools:ignore="HardcodedText"
+                android:paddingStart="12dp"
+                android:paddingEnd="4dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="ADD BOOK"
+        android:id="@+id/submit"
+        android:layout_alignParentBottom="true"
+        tools:ignore="HardcodedText"
+        android:textColor="#fff"
+        android:background="@color/colorPrimary"/>
+
+</RelativeLayout>

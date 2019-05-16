@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "596441908893",
+    "firebase_url": "https://bookbudiapp.firebaseio.com",
+    "project_id": "bookbudiapp",
+    "storage_bucket": "bookbudiapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596441908893:android:b0614185e45b2cbd",
+        "android_client_info": {
+          "package_name": "com.app.bookbudiapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596441908893-do1qqfttgi39oqfa6snjrgln3mlbepgd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.bookbudiapp",
+            "certificate_hash": "ccc924b15aff94320cfdc90cb741b78d800cf1f7"
+          }
+        },
+        {
+          "client_id": "596441908893-683ukt6amqq8g5s0pl1unf3sp6juo2sp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgCO6bXXz7rIsKIHKd16mVeHY2FKawkUM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596441908893-683ukt6amqq8g5s0pl1unf3sp6juo2sp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

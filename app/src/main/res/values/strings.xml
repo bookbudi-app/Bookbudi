@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Bookbudi</string>
+    <string name="action_add">Add</string>
+
+    <string name="home">Home</string>
+    <string name="mylibrary">My library</string>
+    <string name="account">Account</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
