@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import Adapters.TabAdapter;
+
 public class MyLibrary extends Fragment {
 
     private TabLayout my_tab;

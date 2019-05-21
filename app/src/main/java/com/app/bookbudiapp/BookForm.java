@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -269,6 +270,21 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
                     scrollView.setVisibility(View.INVISIBLE);
                     submit.setVisibility(View.INVISIBLE);
                     tick.setVisibility(View.VISIBLE);
+
+                    Handler handler = new Handler();
+
+                    Runnable runnable  = new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            Intent i = new Intent(BookForm.this,MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    };
+
+                    handler.postDelayed(runnable,2000);
 
                 }
             }

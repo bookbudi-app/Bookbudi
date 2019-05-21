@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -74,7 +75,10 @@ public class Account extends Fragment {
 
             profileName.setText(name);
 
-            Glide.with(getContext()).load(photoUrl).into(circleImage);
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.placeholder(R.drawable.user);
+
+            Glide.with(getContext()).load(photoUrl).apply(requestOptions).into(circleImage);
 
         }
 
@@ -121,7 +125,6 @@ public class Account extends Fragment {
 
 
         logOut.setOnClickListener(new View.OnClickListener() {
-
 
             @Override
             public void onClick(View v) {

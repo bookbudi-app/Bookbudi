@@ -1,4 +1,4 @@
-package com.app.bookbudiapp;
+package Models;
 
 public class PostedModel {
 

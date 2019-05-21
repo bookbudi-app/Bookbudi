@@ -12,13 +12,32 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.Time;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.sdsmdg.tastytoast.TastyToast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +45,12 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseUser user;
     EditText search;
+    Spinner chooseLocation;
 
+    Bundle bundle;
+
+    ArrayList<String> list;
+    private static final String URL = "https://bookbudiapp.herokuapp.com/loadCity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
         final ActionBar ab = getSupportActionBar();
         assert ab != null;
-        ab.setTitle("Home");
+        ab.setTitle("");
 
         fAuth = FirebaseAuth.getInstance();
 
         user = fAuth.getCurrentUser();
 
         search = findViewById(R.id.search);
+        chooseLocation = findViewById(R.id.chooseLocation);
 
         if(user == null){
 
@@ -54,10 +79,44 @@ public class MainActivity extends AppCompatActivity {
 
         bottomBar = findViewById(R.id.bottomBar);
 
+        list = new ArrayList<>();
+
         Home fragment = new Home();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame,fragment);
+        fragment.setArguments(bundle);
         fragmentTransaction.commit();
+
+        loadSpinner();
+
+        chooseLocation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    String item = parent.getItemAtPosition(position).toString();
+
+
+                        bundle = new Bundle();
+                        bundle.putString("data", item);
+
+                        //Sending spinner data to fragment when changed
+
+                        Home fragment = new Home();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.frame, fragment);
+                        fragment.setArguments(bundle);
+                        fragmentTransaction.commit();
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+            
+        });
 
         bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -70,11 +129,13 @@ public class MainActivity extends AppCompatActivity {
                         Home fragment = new Home();
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.frame, fragment);
+                        fragment.setArguments(bundle);
                         fragmentTransaction.commit();
 
                         assert ab != null;
-                        ab.setTitle("Home");
+                        ab.setTitle("");
                         search.setVisibility(View.VISIBLE);
+                        chooseLocation.setVisibility(View.VISIBLE);
 
                         return true;
 
@@ -88,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                         assert ab != null;
                         ab.setTitle("My library");
                         search.setVisibility(View.GONE);
+                        chooseLocation.setVisibility(View.GONE);
 
                         return true;
 
@@ -101,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                         assert ab != null;
                         ab.setTitle("Account");
                         search.setVisibility(View.GONE);
+                        chooseLocation.setVisibility(View.GONE);
 
                         return true;
                 }
@@ -109,6 +172,71 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void loadSpinner(){
+
+        OkHttpClient client  = new OkHttpClient.Builder()
+                               .connectTimeout(22, TimeUnit.SECONDS)
+                               .readTimeout(22, TimeUnit.SECONDS)
+                               .writeTimeout(22,TimeUnit.SECONDS)
+                               .build();
+
+        Request request = new Request.Builder().url(URL).build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        try {
+
+                            JSONArray jsonArray = new JSONArray(response.body().string());
+
+                            for(int i = 0; i<jsonArray.length(); i++){
+
+                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                String str = object.getString("Place");
+
+                                list.add(str);
+                            }
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_city,
+                                                                               R.id.locaions,list);
+
+                            chooseLocation.setAdapter(adapter);
+                        }
+
+                        catch (JSONException e) {
+                            e.printStackTrace();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_LONG,TastyToast.ERROR).show();
+                    }
+                });
+            }
+
+        });
     }
 
     @Override
@@ -131,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
             Intent i = new Intent(MainActivity.this,BookForm.class);
             startActivity(i);
-
+            finish();
 
             return true;
         }

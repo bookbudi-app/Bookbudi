@@ -47,6 +47,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import Adapters.OnboardAdapter;
+import Models.LoginBannerModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -121,7 +123,7 @@ public class Login extends AppCompatActivity {
 
                             JSONArray jsonArray = new JSONArray(response.body().string());
 
-                            for(int i = 0;i < jsonArray.length();i++){
+                            for(int i = jsonArray.length() -1 ;i > -1 ;i--){
 
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 

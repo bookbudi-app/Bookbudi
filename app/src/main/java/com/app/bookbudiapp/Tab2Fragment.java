@@ -5,13 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,14 +21,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import Adapters.MyPostedBookAdapter;
+import Models.PostedModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -99,67 +97,73 @@ public class Tab2Fragment extends Fragment {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
 
-                getActivity().runOnUiThread(new Runnable() {
+                if(getActivity() != null) {
 
-                    @Override
-                    public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
 
-                        try {
+                        @Override
+                        public void run() {
 
-                            progressBar1.setVisibility(View.GONE);
+                            try {
 
-                            JSONArray array = new JSONArray(response.body().string());
+                                progressBar1.setVisibility(View.GONE);
 
-                            if(array.length() == 0){
+                                JSONArray array = new JSONArray(response.body().string());
 
-                                postImage.setVisibility(View.VISIBLE);
+                                if (array.length() == 0) {
+
+                                    postImage.setVisibility(View.VISIBLE);
+                                }
+
+                                for (int i = 0; i < array.length(); i++) {
+
+                                    JSONObject object = array.getJSONObject(i);
+
+                                    String str1 = object.getString("Book_name");
+                                    String str2 = object.getString("Book_image");
+                                    String str3 = object.getString("Id");
+
+                                    PostedModel model = new PostedModel(str2, str1, str3);
+
+                                    listItem.add(model);
+                                }
+
+                                MyPostedBookAdapter adapter = new MyPostedBookAdapter(listItem, getActivity());
+                                recyclerView.setAdapter(adapter);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } finally {
+
+                                response.close();
                             }
-
-                            for(int i = 0 ; i < array.length() ; i++){
-
-                                JSONObject object = array.getJSONObject(i);
-
-                                String str1 = object.getString("Book_name");
-                                String str2 = object.getString("Book_image");
-                                String str3 = object.getString("Id");
-
-                                PostedModel model = new PostedModel(str2,str1,str3);
-
-                                listItem.add(model);
-                            }
-
-                            MyPostedBookAdapter adapter = new MyPostedBookAdapter(listItem,getActivity());
-                            recyclerView.setAdapter(adapter);
-
-                        }catch (JSONException e) {
-                            e.printStackTrace();
-
-                        }catch (IOException e) {
-                            e.printStackTrace();
                         }
-                        finally{
 
-                            response.close();
-                        }
-                    }
-
-                });
+                    });
+                }
             }
 
             @Override
             public void onFailure(Call call, final IOException e) {
 
-                getActivity().runOnUiThread(new Runnable() {
+                if(getActivity() != null) {
 
-                    @Override
-                    public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
 
-                        progressBar1.setVisibility(View.GONE);
+                        @Override
+                        public void run() {
 
-                        TastyToast.makeText(getActivity(),"Error:"+e.getMessage(),TastyToast.LENGTH_LONG
-                                ,TastyToast.ERROR).show();
-                    }
-                });
+                            progressBar1.setVisibility(View.GONE);
+
+                            TastyToast.makeText(getActivity(), "Error:" + e.getMessage(), TastyToast.LENGTH_LONG
+                                    , TastyToast.ERROR).show();
+                        }
+                    });
+
+                }
             }
         });
     }

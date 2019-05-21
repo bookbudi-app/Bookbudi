@@ -6,6 +6,7 @@
 
     <color name="tab_enable">#6159e5</color>
     <color name="tab_disable">#cdcdcd</color>
+    <color name="more_button_color">#00e676</color>
 
 
 </resources>
