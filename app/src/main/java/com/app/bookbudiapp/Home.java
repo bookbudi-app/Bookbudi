@@ -3,6 +3,7 @@ package com.app.bookbudiapp;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,6 +45,8 @@ public class Home extends Fragment {
     ArrayList<LoadHomeBooks> list;
     ProgressBar prog;
     ImageView nobook;
+    SwipeRefreshLayout refresh;
+    HomeBookAdapter adapter;
 
 
     private static final String URL = "https://bookbudiapp.herokuapp.com/loadBooks";
@@ -63,6 +66,11 @@ public class Home extends Fragment {
         prog = view.findViewById(R.id.progress2);
         nobook = view.findViewById(R.id.nobook);
         recycle = view.findViewById(R.id.recycle);
+        refresh = view.findViewById(R.id.refresh);
+
+        refresh.setColorSchemeResources(android.R.color.holo_green_dark,
+                                         android.R.color.holo_orange_dark,
+                                         android.R.color.holo_blue_dark);
 
 
         list = new ArrayList<>();
@@ -141,7 +149,7 @@ public class Home extends Fragment {
                                     list.add(model);
                                 }
 
-                                HomeBookAdapter adapter = new HomeBookAdapter(list, getActivity());
+                                 adapter = new HomeBookAdapter(list, getActivity());
 
                                 recycle.setAdapter(adapter);
                             } catch (JSONException e) {
@@ -179,7 +187,111 @@ public class Home extends Fragment {
         });
 
 
-    }
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+
+                if(refresh.isRefreshing()){
+
+                    list.clear();
+                    adapter.notifyDataSetChanged();
+
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .connectTimeout(22, TimeUnit.SECONDS)
+                            .readTimeout(22, TimeUnit.SECONDS)
+                            .writeTimeout(22, TimeUnit.SECONDS)
+                            .build();
+
+                    RequestBody formBody = new FormBody.Builder().add("city", myValue).build();
+
+                    Request request = new Request.Builder().url(URL).post(formBody).build();
+
+                    client.newCall(request).enqueue(new Callback() {
+
+                        @Override
+                        public void onResponse(Call call, final Response response) throws IOException {
+
+                            if (getActivity() != null) {
+
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+
+                                        try {
+
+                                          //  prog.setVisibility(View.GONE);
+
+                                            refresh.setRefreshing(false);
+
+                                            JSONArray jsonArray = new JSONArray(response.body().string());
+
+                                            if (jsonArray.length() == 0) {
+
+                                                nobook.setVisibility(View.VISIBLE);
+
+                                            }
+
+                                            for (int i = jsonArray.length() - 1; i > -1; i--) {
+
+                                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                                String str1 = object.getString("Book_name");
+                                                String str2 = object.getString("Book_image");
+                                                String str3 = object.getString("Subject");
+                                                String str4 = object.getString("Class");
+                                                String str5 = object.getString("Id");
+                                                String str6 = object.getString("User_id");
+
+                                                LoadHomeBooks model = new LoadHomeBooks(str1, str2, str5, str6, str3, str4);
+
+                                                list.add(model);
+                                            }
+
+                                            adapter = new HomeBookAdapter(list, getActivity());
+
+                                            recycle.setAdapter(adapter);
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onFailure(Call call, final IOException e) {
+
+                            if (getActivity() != null) {
+
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+
+                                        prog.setVisibility(View.GONE);
+
+                                        TastyToast.makeText(getActivity(), e.getMessage(), TastyToast.LENGTH_LONG, TastyToast.ERROR).show();
+                                    }
+                                });
+
+                            }
+
+                        }
+
+                    });
+                }
+
+            }
+        });
+
+    } //end if statement that checks bundle value.
 
         return view;
     }
