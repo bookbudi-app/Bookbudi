@@ -13,6 +13,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.sdsmdg.tastytoast.TastyToast;
+
+import java.util.HashMap;
 
 public class Chat extends AppCompatActivity {
 
@@ -20,6 +29,8 @@ public class Chat extends AppCompatActivity {
     EditText msg;
     TextView username;
     RecyclerView messages;
+    FirebaseAuth fAuth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +45,11 @@ public class Chat extends AppCompatActivity {
             getSupportActionBar().setTitle("");
         }
 
+        fAuth = FirebaseAuth.getInstance();
+        user = fAuth.getCurrentUser();
+
         Intent i = getIntent();
-        String str = i.getStringExtra("name");
+        final String str = i.getStringExtra("name");
 
 
         send = findViewById(R.id.send);
@@ -48,7 +62,35 @@ public class Chat extends AppCompatActivity {
         messages.setHasFixedSize(true);
         messages.setLayoutManager(new LinearLayoutManager(this));
 
+        send.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+
+                String text = msg.getText().toString();
+
+                if(!text.equals("")){
+
+                    sendMessage(user.getUid(),str,text);
+                    Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+                }
+
+                msg.setText("");
+            }
+        });
+    }
+
+    private void sendMessage(String sender,String receiver,String message){
+
+        DatabaseReference dRef = FirebaseDatabase.getInstance().getReference();
+
+        HashMap<String,Object> map = new HashMap<>();
+
+        map.put("Sender",sender);
+        map.put("Receiver",receiver);
+        map.put("Message",message);
+
+        dRef.child("Chats").push().setValue(map);
     }
 
     @Override
@@ -63,4 +105,5 @@ public class Chat extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
