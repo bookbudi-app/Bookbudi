@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Chat"
-    android:background="#cdcdcd">
+    android:background="@drawable/confec">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,7 +25,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/username"/>
+                android:id="@+id/username"
+                android:textColor="#fff"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -49,12 +51,17 @@
        android:layout_alignParentBottom="true">
 
        <EditText
-           android:layout_width="wrap_content"
+           android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:id="@+id/msg"
            android:hint="Type message"
+           android:layout_marginTop="8dp"
            android:background="@android:color/transparent"
-           tools:ignore="HardcodedText" />
+           tools:ignore="HardcodedText"
+           android:layout_toLeftOf="@+id/send"
+           android:layout_toStartOf="@+id/send"
+           android:layout_marginRight="10dp"
+           android:layout_marginEnd="10dp" />
 
        <ImageButton
            android:layout_width="40dp"
@@ -65,4 +72,5 @@
            android:layout_alignParentEnd="true" />
 
    </RelativeLayout>
+
 </RelativeLayout>
