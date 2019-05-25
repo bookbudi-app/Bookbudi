@@ -1,6 +1,7 @@
 package Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.bookbudiapp.BookDetail;
 import com.app.bookbudiapp.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -44,8 +46,8 @@ public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHo
 
         LoadHomeBooks model = list.get(i);
 
-        String id = model.getbUid();
-        String bookId = model.getbId();
+        final String bookId = model.getbUid();
+        final String bId = model.getbId();
 
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.openbook);
@@ -61,7 +63,9 @@ public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHo
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(context,"Hello",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(context, BookDetail.class);
+                i.putExtra("bId",bookId);
+                context.startActivity(i);
             }
         });
 
@@ -88,5 +92,13 @@ public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHo
             homeMore = itemView.findViewById(R.id.homeMore);
             homeBookImage = itemView.findViewById(R.id.homeBookImage);
         }
+    }
+
+    public void setFilter(ArrayList<LoadHomeBooks> filterBooks){
+
+        list = new ArrayList<>();
+        list.addAll(filterBooks);
+        notifyDataSetChanged();
+
     }
 }

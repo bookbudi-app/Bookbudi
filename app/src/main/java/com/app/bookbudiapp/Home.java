@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -47,6 +50,7 @@ public class Home extends Fragment {
     ImageView nobook;
     SwipeRefreshLayout refresh;
     HomeBookAdapter adapter;
+    EditText search;
 
 
     private static final String URL = "https://bookbudiapp.herokuapp.com/loadBooks";
@@ -67,6 +71,7 @@ public class Home extends Fragment {
         nobook = view.findViewById(R.id.nobook);
         recycle = view.findViewById(R.id.recycle);
         refresh = view.findViewById(R.id.refresh);
+        search = getActivity().findViewById(R.id.search);
 
         refresh.setColorSchemeResources(android.R.color.holo_green_dark,
                                          android.R.color.holo_orange_dark,
@@ -291,9 +296,43 @@ public class Home extends Fragment {
             }
         });
 
+        search.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                ArrayList<LoadHomeBooks> filterBooks = new ArrayList<>();
+
+                for(LoadHomeBooks books: list){
+
+                    String name = books.getbName().toLowerCase();
+
+                    if(name.contains(s.toString().toLowerCase())){
+
+                        filterBooks.add(books);
+                    }
+
+                    adapter.setFilter(filterBooks);
+                }
+
+            }
+        });
+
     } //end if statement that checks bundle value.
 
         return view;
+
+
     }
 
 
