@@ -1,8 +1,11 @@
 package com.app.bookbudiapp;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -17,9 +20,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -29,6 +35,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.geniusforapp.fancydialog.FancyAlertDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -39,6 +46,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.sdsmdg.tastytoast.TastyToast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +56,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class BookForm extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
@@ -61,9 +77,16 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
     ProgressDialog prg;
     String imageUrl;
 
+    //Dialog elements
+    ImageView close,phoneImg;
+    ImageButton nextPhone;
+    TextView someText;
+    EditText phoneNo;
+
     private static final int PICK_IMAGE_REQUEST = 1;
 
     private static final String URL = "https://bookbudiapp.herokuapp.com/addbooks";
+    private static final String URI = "https://bookbudiapp.herokuapp.com/checkPhoneNo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +146,7 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
             public void onClick(View v) {
 
                 prg = new ProgressDialog(BookForm.this);
-                prg.setTitle("Posting book");
-                prg.setMessage("Thanks for patience...");
+                prg.setMessage("Posting book...");
                 prg.setCancelable(false);
                 prg.show();
 
@@ -196,7 +218,9 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
 
                                              downloadUrl = Uri.parse(uri.toString());
 
-                                             saveData();
+                                           //  saveData();
+
+                                            checkPhoneNo();
                                         }
                                     });
                                 }
@@ -323,6 +347,64 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
         requestQueue.add(stringRequest);
 
     }
+
+    private void checkPhoneNo(){
+
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody formBody = new FormBody.Builder().add("uId",user.getUid()).build();
+
+        okhttp3.Request request = new okhttp3.Request.Builder().post(formBody).url(URI).build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, final okhttp3.Response response) throws IOException {
+
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        try {
+
+                            String resp = response.body().string();
+
+                            if(resp.equals("Exists")){
+
+                                saveData();
+                            }
+                            else{
+
+                              Intent i = new Intent(BookForm.this,AddPhone.class);
+                              startActivity(i);
+                              finish();
+                          }
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_LONG,TastyToast.ERROR).show();
+                    }
+                });
+            }
+
+        });
+    }
+
+
 
   /*  @Override
     public boolean onOptionsItemSelected(MenuItem item) {

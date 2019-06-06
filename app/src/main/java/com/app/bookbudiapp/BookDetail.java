@@ -39,7 +39,7 @@ public class BookDetail extends AppCompatActivity {
     ImageView detailBookImage;
     ProgressBar progBar;
     FloatingActionButton chat;
-    String str6;
+    String str6,str7;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -74,10 +74,11 @@ public class BookDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(BookDetail.this,Chat.class);
+           /*     Intent i = new Intent(BookDetail.this,Chat.class);
                 i.putExtra("name",str6);
+                i.putExtra("id",str7);
                 startActivity(i);
-                finish();
+                finish();  */
             }
         });
 
@@ -124,6 +125,7 @@ public class BookDetail extends AppCompatActivity {
                                 String str4 = object.getString("Cost");
                                 String str5 = object.getString("Class");
                                  str6 = object.getString("Name");
+                                 str7 = object.getString("User_id");
 
                                 RequestOptions requestOptions = new RequestOptions();
                                 requestOptions.placeholder(R.drawable.openbook);

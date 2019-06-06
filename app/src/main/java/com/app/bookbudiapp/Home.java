@@ -316,8 +316,10 @@ public class Home extends Fragment {
                 for(LoadHomeBooks books: list){
 
                     String name = books.getbName().toLowerCase();
+                    String sub = books.getbSub().toLowerCase();
+                    String std = books.getbClass().toLowerCase();
 
-                    if(name.contains(s.toString().toLowerCase())){
+                    if(name.contains(s.toString().toLowerCase()) || std.contains(s.toString().toLowerCase()) || sub.contains(s.toString().toLowerCase())){
 
                         filterBooks.add(books);
                     }
