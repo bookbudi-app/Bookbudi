@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddPhone">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:id="@+id/mobileImage"
+        android:src="@drawable/mobile"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/heading"
+        android:layout_below="@+id/mobileImage"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Add your number"
+        android:textColor="#000"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/subHeading"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@+id/heading"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:text="Adding your number will let other users contact you when they are interested in an item posted by you."
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/phone"
+        android:layout_below="@+id/subHeading"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:hint="Phone"
+        android:paddingLeft="15dp"
+        android:paddingStart="15dp"
+        android:background="@drawable/edit_text"
+        android:inputType="phone"
+        tools:ignore="HardcodedText,RtlSymmetry"/>
+
+    <ProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/phoneProg"
+        android:layout_below="@+id/subHeading"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        android:paddingRight="25dp"
+        android:layout_alignParentEnd="true"
+        android:paddingEnd="25dp"
+        tools:ignore="RtlSymmetry"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:id="@+id/addPhone"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:text="ADD PHONE"
+        android:textColor="#fff"
+        tools:ignore="HardcodedText" />
+
+</RelativeLayout>
