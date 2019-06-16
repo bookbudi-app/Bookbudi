@@ -32,8 +32,8 @@ public class MyLibrary extends Fragment {
         pager = view.findViewById(R.id.pager);
 
         adapter = new TabAdapter(getChildFragmentManager());
-        adapter.addFragment(new Tab1Fragment(), "Purchased");
-        adapter.addFragment(new Tab2Fragment(), "Posted");
+        adapter.addFragment(new Tab1Fragment(), "FAVOURITES");
+        adapter.addFragment(new Tab2Fragment(), "POSTED");
 
         my_tab.setupWithViewPager(pager);
 

@@ -1,18 +1,25 @@
 package com.app.bookbudiapp;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONArray;
@@ -34,12 +41,23 @@ public class BookDetail extends AppCompatActivity {
 
 
     private static final String URL = "https://bookbudiapp.herokuapp.com/bookDetail";
+    private static final String WISHLIST_URI = "https://bookbudiapp.herokuapp.com/checkWishlist";
+    private static final String ADD_TO_WISHLIST_URL = "https://bookbudiapp.herokuapp.com/addtoWishlist";
+    private static final String REMOVE_FROM_WISHLIST = "https://bookbudiapp.herokuapp.com/removeFromWishlist";
 
     TextView detailBookName,detailBookSubject,detailClass,detailPrice;
     ImageView detailBookImage;
+    CardView card_class_prc,card_nam_sub,userDetail;
     ProgressBar progBar;
-    FloatingActionButton chat;
+    View view1,view2,view3;
+    TextView disclaimer,fav;
+    Button callButton;
+   // FloatingActionButton chat;
     String str6,str7;
+    FirebaseAuth fAuth;
+    FirebaseUser user;
+
+    String str,strbImage,strbName,strbSub,strbClass,userid;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -51,36 +69,75 @@ public class BookDetail extends AppCompatActivity {
         assert ab != null;
         ab.hide();
 
+        fAuth = FirebaseAuth.getInstance();
+        user = fAuth.getCurrentUser();
+
+        if(user != null){
+
+            userid = user.getUid();
+        }
+
         detailBookName = findViewById(R.id.detailBookName);
         detailBookSubject = findViewById(R.id.detailBookSubject);
         detailClass = findViewById(R.id.detailClass);
         detailPrice = findViewById(R.id.detailPrice);
         detailBookImage = findViewById(R.id.detailBookImage);
+        view1 = findViewById(R.id.view1);
+        view2 = findViewById(R.id.view2);
+        view3 = findViewById(R.id.view3);
+        //heartButton = findViewById(R.id.heartButton);
+        fav = findViewById(R.id.fav);
         progBar = findViewById(R.id.progBar);
-        chat = findViewById(R.id.chat);
+        card_nam_sub = findViewById(R.id.card_nam_sub);
+        card_class_prc = findViewById(R.id.card_class_prc);
+        userDetail  = findViewById(R.id.userDetail);
+        disclaimer = findViewById(R.id.disclaimer);
+        callButton = findViewById(R.id.callButton);
+      //  chat = findViewById(R.id.chat);
 
         detailBookName.setVisibility(View.GONE);
         detailBookSubject.setVisibility(View.GONE);
         detailClass.setVisibility(View.GONE);
         detailPrice.setVisibility(View.GONE);
         detailBookImage.setVisibility(View.GONE);
-        chat.setVisibility(View.GONE);
+        view1.setVisibility(View.INVISIBLE);
+        view2.setVisibility(View.INVISIBLE);
+        view3.setVisibility(View.INVISIBLE);
+        fav.setVisibility(View.INVISIBLE);
+        card_nam_sub.setVisibility(View.INVISIBLE);
+        card_class_prc.setVisibility(View.INVISIBLE);
+        userDetail.setVisibility(View.INVISIBLE);
+        disclaimer.setVisibility(View.INVISIBLE);
+        callButton.setVisibility(View.INVISIBLE);
 
-        Intent intent = getIntent();
-        String str = intent.getStringExtra("bId");
+       // chat.setVisibility(View.GONE);
 
-        chat.setOnClickListener(new View.OnClickListener() {
+         Intent intent = getIntent();
+         str = intent.getStringExtra("bId");
+         strbImage = intent.getStringExtra("bookImage");
+         strbName = intent.getStringExtra("bookName");
+         strbSub = intent.getStringExtra("bookSub");
+         strbClass = intent.getStringExtra("bookClass");
+
+
+         fav.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-           /*     Intent i = new Intent(BookDetail.this,Chat.class);
-                i.putExtra("name",str6);
-                i.putExtra("id",str7);
-                startActivity(i);
-                finish();  */
+                if(fav.getText().toString().equals("ADD TO FAVOURITES")){
+
+                   addtoWishlist(userid,str,strbImage,strbName,strbSub,strbClass);
+
+                }else{
+
+                   removefromWishlist(str,userid);
+               }
+
             }
         });
+
+        checkWishlist(str,userid);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
@@ -95,7 +152,7 @@ public class BookDetail extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
 
             @Override
-            public void onResponse(Call call, final Response response) throws IOException {
+            public void onResponse(final Call call, final Response response) throws IOException {
 
                 runOnUiThread(new Runnable() {
 
@@ -111,7 +168,16 @@ public class BookDetail extends AppCompatActivity {
                             detailClass.setVisibility(View.VISIBLE);
                             detailPrice.setVisibility(View.VISIBLE);
                             detailBookImage.setVisibility(View.VISIBLE);
-                            chat.setVisibility(View.VISIBLE);
+                            fav.setVisibility(View.VISIBLE);
+                            view1.setVisibility(View.VISIBLE);
+                            view2.setVisibility(View.VISIBLE);
+                            view3.setVisibility(View.VISIBLE);
+                            card_class_prc.setVisibility(View.VISIBLE);
+                            card_nam_sub.setVisibility(View.VISIBLE);
+                            userDetail.setVisibility(View.VISIBLE);
+                            disclaimer.setVisibility(View.VISIBLE);
+                            callButton.setVisibility(View.VISIBLE);
+                            // chat.setVisibility(View.VISIBLE);
 
                             JSONArray jsonArray = new JSONArray(response.body().string());
 
@@ -162,6 +228,207 @@ public class BookDetail extends AppCompatActivity {
 
                         TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_LONG,TastyToast.ERROR).show();
 
+                    }
+                });
+            }
+
+        });
+
+    }
+
+    private void checkWishlist(String str,String userid){
+
+           OkHttpClient client = new OkHttpClient.Builder()
+                                 .connectTimeout(30,TimeUnit.SECONDS)
+                                 .readTimeout(30,TimeUnit.SECONDS)
+                                 .writeTimeout(30,TimeUnit.SECONDS)
+                                 .build();
+
+           RequestBody body = new FormBody.Builder()
+                                       .add("bId",str)
+                                       .add("uId",userid)
+                                       .build();
+
+           Request request = new Request.Builder().url(WISHLIST_URI).post(body).build();
+
+           client.newCall(request).enqueue(new Callback() {
+
+               @Override
+               public void onResponse(Call call, final Response response) throws IOException {
+
+                   runOnUiThread(new Runnable() {
+                       @SuppressLint("SetTextI18n")
+                       @Override
+                       public void run() {
+
+                           try {
+
+                               String resp = response.body().string();
+
+                               if(resp.equals("Available")){
+
+                                   fav.setVisibility(View.VISIBLE);
+                                   fav.setText("UNFAVOURITE");
+
+                               }if(resp.equals("not available")){
+
+                                   fav.setVisibility(View.VISIBLE);
+                                   fav.setText("ADD TO FAVOURITES");
+                               }
+
+                           }catch (IOException e) {
+                               e.printStackTrace();
+                           }
+                       }
+                   });
+               }
+
+               @Override
+               public void onFailure(Call call, final IOException e) {
+
+                   runOnUiThread(new Runnable() {
+                       @Override
+                       public void run() {
+
+                           TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+                       }
+                   });
+               }
+
+           });
+    }
+
+    private void addtoWishlist(String userid,String str,String strbImage,String strbName,String strbSub,String strbClass){
+
+        final ProgressDialog prg = new ProgressDialog(BookDetail.this);
+        prg.setMessage("Adding to favourites...");
+        prg.setCancelable(false);
+        prg.show();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                                  .connectTimeout(30,TimeUnit.SECONDS)
+                                  .readTimeout(30,TimeUnit.SECONDS)
+                                  .writeTimeout(30,TimeUnit.SECONDS)
+                                  .build();
+
+        RequestBody body = new FormBody.Builder()
+                            .add("UserId",userid)
+                            .add("BookId",str)
+                            .add("Book_Image",strbImage)
+                            .add("Book_name",strbName)
+                            .add("Book_subject",strbSub)
+                            .add("Book_class",strbClass)
+                            .build();
+
+        Request request = new Request.Builder().post(body).url(ADD_TO_WISHLIST_URL).build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                runOnUiThread(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+
+                        try {
+
+                            String resp = response.body().string();
+
+                            if(resp.equals("Data added")){
+
+                                prg.dismiss();
+                                fav.setText("UNFAVOURITE");
+
+                            }else{
+
+                                prg.dismiss();
+                                fav.setText("ADD TO FAVOURITES");
+                            }
+
+                        }catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        prg.dismiss();
+                        TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+                    }
+                });
+            }
+
+        });
+    }
+
+    private void removefromWishlist(String str,String userid){
+
+        final ProgressDialog prg = new ProgressDialog(BookDetail.this);
+        prg.setMessage("Removing from favourites...");
+        prg.show();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(22,TimeUnit.SECONDS)
+                .readTimeout(22,TimeUnit.SECONDS)
+                .writeTimeout(22,TimeUnit.SECONDS)
+                .build();
+
+        FormBody body = new FormBody.Builder()
+                      .add("bId",str)
+                      .add("uId",userid) 
+                      .build();
+
+        Request request = new Request.Builder().post(body).url(REMOVE_FROM_WISHLIST).build();
+
+        client.newCall(request).enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                           runOnUiThread(new Runnable() {
+                               @SuppressLint("SetTextI18n")
+                               @Override
+                               public void run() {
+
+                                   try {
+
+                                       String resp = response.body().string();
+
+                                       if(resp.equals("Deleted")){
+
+                                           prg.dismiss();
+                                           fav.setText("ADD TO FAVOURITES");
+                                       }else{
+
+                                           prg.dismiss();
+                                           fav.setText("UNFAVOURITE");
+                                       }
+
+                                   }catch (IOException e) {
+
+                                       e.printStackTrace();
+                                   }
+                               }
+                           });
+            }
+
+            @Override
+            public void onFailure(Call call, final IOException e) {
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
                     }
                 });
             }

@@ -5,19 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Tab1Fragment"
-    android:background="#fff">
+    android:background="#fff"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/favProgress"
+        android:layout_centerInParent="true"/>
 
     <ImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:src="@drawable/purchase"
-        android:id="@+id/purchaseImage"
-        android:layout_centerInParent="true"/>
+        android:id="@+id/favImage"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/purchasedBook"/>
+        android:id="@+id/favBook"/>
 
 
 </RelativeLayout>

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.bookbudiapp.BookDetail;
 import com.app.bookbudiapp.R;
@@ -36,7 +35,7 @@ public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHo
     @Override
     public HomeBookAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.home_book_layout,viewGroup,false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.home_book_row,viewGroup,false);
 
         return new ViewHolder(v);
     }
@@ -47,6 +46,10 @@ public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHo
         LoadHomeBooks model = list.get(i);
 
         final String bookId = model.getbUid();
+        final String bookName = model.getbName();
+        final String bookImage = model.getbImage();
+        final String bookSub = model.getbSub();
+        final String bookClass = model.getbClass();
         final String bId = model.getbId();
 
         RequestOptions requestOptions = new RequestOptions();
@@ -65,6 +68,10 @@ public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHo
 
                 Intent i = new Intent(context, BookDetail.class);
                 i.putExtra("bId",bookId);
+                i.putExtra("bookName",bookName);
+                i.putExtra("bookImage",bookImage);
+                i.putExtra("bookSub",bookSub);
+                i.putExtra("bookClass",bookClass);
                 context.startActivity(i);
             }
         });

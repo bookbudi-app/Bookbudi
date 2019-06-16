@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -350,7 +351,11 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
 
     private void checkPhoneNo(){
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                              .connectTimeout(22, TimeUnit.SECONDS)
+                              .readTimeout(22,TimeUnit.SECONDS)
+                              .writeTimeout(22,TimeUnit.SECONDS)
+                              .build();
 
         RequestBody formBody = new FormBody.Builder().add("uId",user.getUid()).build();
 

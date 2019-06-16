@@ -2,27 +2,33 @@ package Adapters;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.RecoverySystem;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import Models.PostedModel;
 import com.app.bookbudiapp.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import Models.FavouriteBooksModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -31,83 +37,92 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MyPostedBookAdapter extends RecyclerView.Adapter<MyPostedBookAdapter.ViewHolder> {
+public class FavBookAdapter extends RecyclerView.Adapter<FavBookAdapter.ViewHolder> {
 
-    List<PostedModel> listItem;
     Activity context;
-
-    private static final String URI = "https:bookbudiapp.herokuapp.com/deleteRow";
-
+    List<FavouriteBooksModel> lists;
     ProgressDialog prg;
+    FirebaseAuth fAuth;
+    FirebaseUser user;
 
-    public MyPostedBookAdapter(List<PostedModel> listItem, Activity context){
+    private static final String URL = "https://bookbudiapp.herokuapp.com/removeFromWishlist";
 
-        this.listItem = listItem;
+    public FavBookAdapter(List<FavouriteBooksModel> lists,Activity context){
+
+        this.lists = lists;
         this.context = context;
     }
 
     @NonNull
     @Override
-    public MyPostedBookAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public FavBookAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.posted_book_row,viewGroup,false);
+       View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.favourite_book_row,viewGroup,false);
 
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyPostedBookAdapter.ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final FavBookAdapter.ViewHolder viewHolder, int i) {
 
         prg = new ProgressDialog(context);
-        prg.setMessage("Deleting book...");
+        prg.setMessage("Removing book...");
         prg.setCancelable(false);
 
-        final PostedModel model =  listItem.get(i);
+        FavouriteBooksModel model = lists.get(i);
 
-        final String id = model.getPostId();
+        final String userId = model.getFavBookId();
+        final String bookId = model.getFavUserId();
 
-        viewHolder.userBookName.setText(model.getPurchaseBookName());
+        viewHolder.userBookName.setText(model.getFavbName());
 
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.openbook);
+        RequestOptions options = new RequestOptions();
+        options.placeholder(R.drawable.openbook);
 
-        Glide.with(context).load(model.getPurchaseImage()).apply(requestOptions).into(viewHolder.userPostBook);
+        Glide.with(context).load(model.getFavImg()).apply(options).into(viewHolder.userFavBook);
 
-        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+        viewHolder.unFav.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("Book will be deleted permanently.");
+                builder.setMessage("Book will no longer be in your favourites.");
                 builder.setCancelable(true);
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         dialogInterface.cancel();
+
                     }
                 });
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(DialogInterface dialog, int which) {
 
                         prg.show();
 
+                        fAuth = FirebaseAuth.getInstance();
+                        user = fAuth.getCurrentUser();
+
                         OkHttpClient client = new OkHttpClient.Builder()
-                                .connectTimeout(20, TimeUnit.SECONDS)
-                                .readTimeout(20,TimeUnit.SECONDS)
-                                .writeTimeout(20, TimeUnit.SECONDS)
+                                .connectTimeout(22, TimeUnit.SECONDS)
+                                .readTimeout(22,TimeUnit.SECONDS)
+                                .writeTimeout(22,TimeUnit.SECONDS)
                                 .build();
 
-                        RequestBody formBody = new FormBody.Builder().add("postId",id).build();
+                        RequestBody body = new FormBody.Builder()
+                                .add("uId",user.getUid())
+                                .add("bId",bookId)
+                                .build();
 
-                        Request request = new Request.Builder().url(URI).post(formBody).build();
+                        Request request = new Request.Builder().post(body).url(URL).build();
 
                         client.newCall(request).enqueue(new Callback() {
 
                             @Override
-                            public void onResponse(Call call, final Response response) throws IOException {
+                            public void onResponse(Call call, final Response response) {
 
                                 context.runOnUiThread(new Runnable() {
 
@@ -118,34 +133,37 @@ public class MyPostedBookAdapter extends RecyclerView.Adapter<MyPostedBookAdapte
 
                                             String str = response.body().string();
 
+                                            Log.d("Response",str);
+
                                             if(str.equals("Deleted")){
 
                                                 prg.dismiss();
 
                                                 int position = viewHolder.getAdapterPosition();
 
-                                                listItem.remove(position);
+                                                lists.remove(position);
                                                 notifyItemRemoved(position);
-                                                notifyItemRangeChanged(position,listItem.size());
+                                                notifyItemRangeChanged(position,lists.size());
+
                                             }
 
-                                        }catch (IOException e) {
+                                        } catch (IOException e) {
                                             e.printStackTrace();
                                         }
                                     }
                                 });
+
                             }
 
                             @Override
                             public void onFailure(Call call, final IOException e) {
 
                                 context.runOnUiThread(new Runnable() {
-
                                     @Override
                                     public void run() {
 
                                         prg.dismiss();
-                                        TastyToast.makeText(context,e.getMessage(),TastyToast.LENGTH_LONG,TastyToast.ERROR).show();
+                                        TastyToast.makeText(context,e.getMessage(),TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
                                     }
                                 });
                             }
@@ -163,21 +181,21 @@ public class MyPostedBookAdapter extends RecyclerView.Adapter<MyPostedBookAdapte
 
     @Override
     public int getItemCount() {
-        return listItem.size();
+        return lists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView userPostBook;
+        ImageView userFavBook;
         TextView userBookName;
-        Button delete;
+        Button unFav;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            userPostBook = (itemView).findViewById(R.id.userPostBook);
+            userFavBook = (itemView).findViewById(R.id.userFavBook);
             userBookName = (itemView).findViewById(R.id.userBookName);
-            delete = (itemView).findViewById(R.id.delete);
+            unFav = (itemView).findViewById(R.id.unFav);
         }
     }
 

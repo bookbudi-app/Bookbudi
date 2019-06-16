@@ -8,10 +8,11 @@
     tools:context=".Home"
     android:orientation="vertical"
     android:id="@+id/linearHome"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    android:layout_marginTop="10dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:layout_marginBottom="50dp">
 
     <ProgressBar
         android:layout_width="wrap_content"
@@ -27,27 +28,7 @@
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
-   <!-- <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none">  -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="45dp">
-
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-1218708258118994/5056317840">
-        </com.google.android.gms.ads.AdView>
-
-        <android.support.v4.widget.SwipeRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/refresh">
@@ -55,14 +36,9 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recycle"
-            android:layout_marginTop="10dp"
-            />
+            android:id="@+id/recycle"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-<!-- </ScrollView> -->
-
-</RelativeLayout>

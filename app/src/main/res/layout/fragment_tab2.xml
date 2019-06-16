@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Tab2Fragment"
     android:background="#fff"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
 
     <ProgressBar
         android:layout_width="wrap_content"

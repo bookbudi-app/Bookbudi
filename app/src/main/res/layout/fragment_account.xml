@@ -8,7 +8,10 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     tools:context=".Account"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="16dp" 
+    android:paddingBottom="16dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -159,7 +162,8 @@
             android:textColor="#adadad"
             android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
-            android:text="App Version:1.0"/>
+            android:text="App Version:1.0"
+            tools:ignore="HardcodedText" />
 
     </RelativeLayout>
 
