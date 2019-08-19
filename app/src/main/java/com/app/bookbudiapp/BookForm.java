@@ -1,31 +1,26 @@
 package com.app.bookbudiapp;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -35,19 +30,20 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.geniusforapp.fancydialog.FancyAlertDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.sdsmdg.tastytoast.TastyToast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -58,6 +54,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import Models.FirebaseCityModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -78,16 +75,16 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
     ProgressDialog prg;
     String imageUrl;
 
-    //Dialog elements
-    ImageView close,phoneImg;
-    ImageButton nextPhone;
-    TextView someText;
-    EditText phoneNo;
+    FirebaseDatabase fireData;
+    DatabaseReference dbRef;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private static final String URL = "https://bookbudiapp.herokuapp.com/addbooks";
-    private static final String URI = "https://bookbudiapp.herokuapp.com/checkPhoneNo";
+  //  private static final String URL = "https://bookbudiapp.herokuapp.com/addbooks";
+  //  private static final String URI = "https://bookbudiapp.herokuapp.com/checkPhoneNo";
+
+    private static final String URL = "https://bookbudi-prod.herokuapp.com/addbooks";
+    private static final String URI = "https://bookbudi-prod.herokuapp.com/checkPhoneNo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,10 +93,11 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
 
         ActionBar ab = getSupportActionBar();
         assert ab != null;
-        ab.setTitle("Add book");
+        ab.setTitle("Add item");
         ab.setElevation(0);
 
         sRef = FirebaseStorage.getInstance().getReference();
+        dbRef = fireData.getInstance().getReference();
         fAuth = FirebaseAuth.getInstance();
         user = fAuth.getCurrentUser();
 
@@ -272,6 +270,7 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
 
         final String uid = user.getUid();
         final String email = user.getEmail();
+        final Uri profileImage  = user.getPhotoUrl();
         final String name = user.getDisplayName();
         final String bookname = bookName.getText().toString();
         final String sub = subject.getText().toString();
@@ -296,7 +295,64 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
                     submit.setVisibility(View.INVISIBLE);
                     tick.setVisibility(View.VISIBLE);
 
-                    Handler handler = new Handler();
+                    if(getSupportActionBar()!=null){
+                        getSupportActionBar().hide();
+                    }
+
+                    final FirebaseCityModel model = new FirebaseCityModel();
+
+                    model.setCity(cityname);
+                   // dbRef.child("Cities").push().setValue(model);
+
+                    dbRef.child("Cities").orderByChild("city").equalTo(cityname)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    if(dataSnapshot.exists()){
+
+                                        Handler handler = new Handler();
+
+                                        Runnable runnable  = new Runnable() {
+
+                                            @Override
+                                            public void run() {
+
+                                                Intent i = new Intent(BookForm.this,MainActivity.class);
+                                                startActivity(i);
+                                                finish();
+                                            }
+                                        };
+
+                                        handler.postDelayed(runnable,2000);
+
+                                    }else{
+
+                                        dbRef.child("Cities").push().setValue(model);
+                                        Handler handler = new Handler();
+
+                                        Runnable runnable  = new Runnable() {
+
+                                            @Override
+                                            public void run() {
+
+                                                Intent i = new Intent(BookForm.this,MainActivity.class);
+                                                startActivity(i);
+                                                finish();
+                                            }
+                                        };
+
+                                        handler.postDelayed(runnable,2000);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                /*    Handler handler = new Handler();
 
                     Runnable runnable  = new Runnable() {
 
@@ -309,7 +365,7 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
                         }
                     };
 
-                    handler.postDelayed(runnable,2000);
+                    handler.postDelayed(runnable,2000);  */
 
                 }
             }
@@ -340,6 +396,7 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
                 map.put("city",cityname);
                 map.put("cost",cost);
                 map.put("image",image);
+                map.put("profileImage", String.valueOf(profileImage));
 
                 return map;
             }
@@ -430,10 +487,29 @@ public class BookForm extends AppCompatActivity implements AdapterView.OnItemSel
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        Intent i = new Intent(BookForm.this,MainActivity.class);
-        startActivity(i);
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(BookForm.this);
+        builder.setMessage("Do you want to leave.");
+        builder.setCancelable(true);
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                dialogInterface.cancel();
+            }
+        });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                Intent intent = new Intent(BookForm.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
     }
 }

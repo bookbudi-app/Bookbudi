@@ -6,9 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="130dp"
+        app:contentPadding="3dp"
         app:cardCornerRadius="3dp"
         app:cardBackgroundColor="#fff"
         app:cardUseCompatPadding="true">
@@ -19,6 +20,6 @@
         android:id="@+id/offerImage"
         android:scaleType="fitXY"/>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

@@ -1,10 +1,11 @@
 package com.app.bookbudiapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,8 @@ public class AddPhone extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseUser user;
 
-    private static final String  URL = "https://bookbudiapp.herokuapp.com/addPhoneNo";
+   // private static final String  URL = "https://bookbudiapp.herokuapp.com/addPhoneNo";
+    private static final String  URL = "https://bookbudi-prod.herokuapp.com/addPhoneNo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,16 +155,20 @@ public class AddPhone extends AppCompatActivity {
 
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
 
-        if(id == android.R.id.home){
+        switch(id){
 
-            Intent i = new Intent(AddPhone.this,BookForm.class);
-            startActivity(i);
-            finish();
+            case android.R.id.home:
+
+                Intent in = new Intent(AddPhone.this,MainActivity.class);
+                startActivity(in);
+                finish();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -171,7 +177,11 @@ public class AddPhone extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddPhone.this);
+        Intent i  = new Intent(AddPhone.this,MainActivity.class);
+        startActivity(i);
+        finish();
+
+    /*    AlertDialog.Builder builder = new AlertDialog.Builder(AddPhone.this);
         builder.setMessage("Are you sure you want to exit.");
         builder.setCancelable(true);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -190,7 +200,7 @@ public class AddPhone extends AppCompatActivity {
         });
 
         AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        alertDialog.show();  */
 
     }
 }

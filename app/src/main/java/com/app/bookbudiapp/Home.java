@@ -2,11 +2,12 @@ package com.app.bookbudiapp;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,8 +17,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-
 
 import com.sdsmdg.tastytoast.TastyToast;
 
@@ -44,21 +43,25 @@ import okhttp3.Response;
 
 public class Home extends Fragment {
 
-    String myValue;
-    RecyclerView recycle;
-    ArrayList<LoadHomeBooks> list;
-    ProgressBar prog;
-    ImageView nobook;
-    SwipeRefreshLayout refresh;
-    HomeBookAdapter adapter;
-    EditText search;
+    private String myValue;
+    private RecyclerView recycle;
+    private ArrayList<LoadHomeBooks> list;
+    private ProgressBar prog;
+    private ImageView nobook;
+    private SwipeRefreshLayout refresh;
+    private HomeBookAdapter adapter;
+    private EditText search;
 
-   // ViewPager homeOffers;
-   // HomeOfferAdapter offerAdapter;
-    List<HomeOffersModel> banners;
+    //TabLayout indicator;
+    private ViewPager homeOffers;
+    private HomeOfferAdapter offerAdapter;
+    private List<HomeOffersModel> banners;
 
-    private static final String URL = "https://bookbudiapp.herokuapp.com/loadBooks";
-    private static final String HOME_OFFERS = "https://bookbudiapp.herokuapp.com/banners";
+   // private static final String URL = "https://bookbudiapp.herokuapp.com/loadBooks";
+   // private static final String HOME_OFFERS = "https://bookbudiapp.herokuapp.com/banners";
+
+    private static final String URL = "https://bookbudi-prod.herokuapp.com/loadBooks";
+    private static final String HOME_OFFERS = "https://bookbudi-prod.herokuapp.com/banners";
 
     public Home() {
         // Required empty public constructor
@@ -70,19 +73,31 @@ public class Home extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-      //  homeOffers = view.findViewById(R.id.homeOffers);
+
+
+        homeOffers = view.findViewById(R.id.homeOffers);
         prog = view.findViewById(R.id.progress2);
         nobook = view.findViewById(R.id.nobook);
         recycle = view.findViewById(R.id.recycle);
+       // indicator = view.findViewById(R.id.indicator);
         refresh = view.findViewById(R.id.refresh);
-        search = getActivity().findViewById(R.id.search);
+
+        homeOffers.setClipToPadding(false);
+        homeOffers.setPadding(30,0,30,0);
+
+        if(getActivity() != null){
+
+            search = getActivity().findViewById(R.id.search);
+        }
 
         refresh.setColorSchemeResources(android.R.color.holo_green_dark,
                                          android.R.color.holo_orange_dark,
                                          android.R.color.holo_blue_dark);
 
         list = new ArrayList<>();
-     //   banners = new ArrayList<>();
+        banners = new ArrayList<>();
+
+      // indicator.setupWithViewPager(homeOffers,true);
 
         recycle.setHasFixedSize(true);
         recycle.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -93,7 +108,7 @@ public class Home extends Fragment {
 
         if (bundle != null) {
 
-       //     loadHomeOffers();
+            loadHomeOffers();
 
             myValue = bundle.getString("data");
 
@@ -128,10 +143,13 @@ public class Home extends Fragment {
                                 if (jsonArray.length() == 0) {
 
                                     nobook.setVisibility(View.VISIBLE);
+                                    homeOffers.setVisibility(View.GONE);
 
                                 }
 
                                 for (int i = jsonArray.length() - 1; i > -1; i--) {
+
+                                    homeOffers.setVisibility(View.VISIBLE);
 
                                     JSONObject object = jsonArray.getJSONObject(i);
 
@@ -193,6 +211,7 @@ public class Home extends Fragment {
                 if(refresh.isRefreshing()){
 
                     list.clear();
+                    homeOffers.setVisibility(View.INVISIBLE);
                     adapter.notifyDataSetChanged();
 
                     OkHttpClient client = new OkHttpClient.Builder()
@@ -222,6 +241,7 @@ public class Home extends Fragment {
                                           //  prog.setVisibility(View.GONE);
 
                                             refresh.setRefreshing(false);
+                                            homeOffers.setVisibility(View.VISIBLE);
 
                                             JSONArray jsonArray = new JSONArray(response.body().string());
 
@@ -273,6 +293,8 @@ public class Home extends Fragment {
                                     @Override
                                     public void run() {
 
+                                        refresh.setRefreshing(false);
+                                        homeOffers.setVisibility(View.VISIBLE);
                                         prog.setVisibility(View.GONE);
 
                                         TastyToast.makeText(getActivity(), e.getMessage(), TastyToast.LENGTH_LONG, TastyToast.ERROR).show();
@@ -306,7 +328,13 @@ public class Home extends Fragment {
 
                 ArrayList<LoadHomeBooks> filterBooks = new ArrayList<>();
 
+                homeOffers.setVisibility(View.GONE);
+
                 for(LoadHomeBooks books: list){
+
+                    if(s.length() == 0){
+                        homeOffers.setVisibility(View.VISIBLE);
+                    }
 
                     String name = books.getbName().toLowerCase();
                     String sub = books.getbSub().toLowerCase();
@@ -329,7 +357,7 @@ public class Home extends Fragment {
 
     }
 
-  /*  private void loadHomeOffers(){
+    private void loadHomeOffers(){
 
         OkHttpClient client = new OkHttpClient.Builder()
                               .connectTimeout(22,TimeUnit.SECONDS)
@@ -354,7 +382,13 @@ public class Home extends Fragment {
 
                                 JSONArray jsonArray = new JSONArray(response.body().string());
 
+                                if(jsonArray.length() == 0){
+                                    homeOffers.setVisibility(View.GONE);
+                                }
+
                                 for (int i = jsonArray.length() - 1; i > -1; i--) {
+
+                                    homeOffers.setBackgroundResource(R.color.colorPrimary);
 
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
@@ -398,7 +432,7 @@ public class Home extends Fragment {
 
         });
 
-    } */
+    }
 
 
 }

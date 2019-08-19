@@ -3,13 +3,13 @@ package com.app.bookbudiapp;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -68,8 +68,11 @@ public class Login extends AppCompatActivity {
     ProgressBar progressBar;
     List<LoginBannerModel> banners;
 
-    private static final String URL = "https://bookbudiapp.herokuapp.com/users";
-    private static final String URI = "https://bookbudiapp.herokuapp.com/loginBanners";
+  /*  private static final String URL = "https://bookbudiapp.herokuapp.com/users";
+    private static final String URI = "https://bookbudiapp.herokuapp.com/loginBanners";  */
+
+    private static final String URL = "https://bookbudi-prod.herokuapp.com/users";
+    private static final String URI = "https://bookbudi-prod.herokuapp.com/loginBanners";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +95,8 @@ public class Login extends AppCompatActivity {
         signIn = findViewById(R.id.signIn);
 
         progressBar.setVisibility(View.VISIBLE);
-        signIn.setEnabled(false);
+        //signIn.setEnabled(false);
+        signIn.setVisibility(View.INVISIBLE);
 
         banners = new ArrayList<>();
 
@@ -117,7 +121,8 @@ public class Login extends AppCompatActivity {
                     public void run() {
 
                         progressBar.setVisibility(View.GONE);
-                        signIn.setEnabled(true);
+                        //signIn.setEnabled(true);
+                        signIn.setVisibility(View.VISIBLE);
 
                         try {
 
@@ -263,7 +268,7 @@ public class Login extends AppCompatActivity {
                 else if(response.equals("User created")){
 
                     prg.dismiss();
-                    Intent i = new Intent(Login.this,MainActivity.class);
+                    Intent i = new Intent(Login.this,AddPhone.class);
                     startActivity(i);
                     finish();
                 }

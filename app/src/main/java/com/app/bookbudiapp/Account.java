@@ -6,8 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +37,7 @@ public class Account extends Fragment {
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth fAuth;
     FirebaseUser user;
-    LinearLayout settingsCard,supportCard,shareCard;
+    LinearLayout faqCard,supportCard,shareCard,rateCard;
 
     public Account() {
         // Required empty public constructor
@@ -56,9 +56,10 @@ public class Account extends Fragment {
         circleImage = view.findViewById(R.id.circleImage);
         profileName = view.findViewById(R.id.profileName);
         logOut = view.findViewById(R.id.logOut);
-        settingsCard = view.findViewById(R.id.settingsCard);
+        faqCard = view.findViewById(R.id.faqCard);
         supportCard = view.findViewById(R.id.supportCard);
         shareCard = view.findViewById(R.id.shareCard);
+        rateCard = view.findViewById(R.id.rateCard);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -82,11 +83,13 @@ public class Account extends Fragment {
 
         }
 
-        settingsCard.setOnClickListener(new View.OnClickListener() {
-
+        faqCard.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
+                Intent faq = new Intent(getActivity(),Faq.class);
+                startActivity(faq);
+                getActivity().finish();
             }
         });
 
@@ -118,8 +121,23 @@ public class Account extends Fragment {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT,"Bookbudi app");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Hello there, I found this awesome book sharing app take a look.");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Hello there, I found this awesome book sharing app take a look."+"https://play.google.com/store/apps/details?id=com.app.bookbudiapp");
+
                 startActivity(Intent.createChooser(shareIntent,"Share via"));
+            }
+        });
+
+        rateCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.app.bookbudiapp");
+                Intent appLink = new Intent(Intent.ACTION_VIEW,uri);
+                try{
+                    startActivity(appLink);
+                }catch(Exception e){
+                    TastyToast.makeText(getActivity(),"App is not available",TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+                }
             }
         });
 

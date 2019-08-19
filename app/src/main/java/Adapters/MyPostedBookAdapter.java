@@ -3,9 +3,9 @@ package Adapters;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,8 @@ import Models.PostedModel;
 import com.app.bookbudiapp.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.IOException;
@@ -36,7 +38,8 @@ public class MyPostedBookAdapter extends RecyclerView.Adapter<MyPostedBookAdapte
     List<PostedModel> listItem;
     Activity context;
 
-    private static final String URI = "https:bookbudiapp.herokuapp.com/deleteRow";
+    //private static final String URI = "https:bookbudiapp.herokuapp.com/deleteRow";
+    private static final String URI = "https:bookbudi-prod.herokuapp.com/deleteRow";
 
     ProgressDialog prg;
 

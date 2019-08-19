@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -17,7 +17,7 @@
         android:fitsSystemWindows="true">
 
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -28,11 +28,11 @@
 
             <Spinner
                 android:layout_width="110dp"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/chooseLocation"
                 app:backgroundTint="@android:color/white"/>
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <EditText
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
             android:paddingBottom="6dp"
             android:paddingRight="6dp"
             android:paddingLeft="12dp"
-            android:hint="Search book name,subject or standard"
+            android:hint="Search book name or subject"
             android:textSize="15sp"
             android:textColorHint="#9e9e9e"
             android:textColor="#000"
@@ -53,11 +53,11 @@
             android:paddingEnd="6dp"
             android:paddingStart="12dp"/>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/bottomBar"
@@ -67,4 +67,4 @@
         app:itemIconTint="@drawable/nav_check"
         app:itemTextColor="@drawable/nav_check"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

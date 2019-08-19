@@ -61,7 +61,8 @@
                 android:paddingRight="4dp"
                 tools:ignore="HardcodedText"
                 android:paddingStart="12dp"
-                android:paddingEnd="4dp" />
+                android:paddingEnd="4dp"
+                android:inputType="textCapWords"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -74,7 +75,8 @@
                 android:paddingRight="4dp"
                 tools:ignore="HardcodedText"
                 android:paddingStart="12dp"
-                android:paddingEnd="4dp" />
+                android:paddingEnd="4dp"
+                android:inputType="textCapWords"/>
 
             <Spinner
                 android:layout_width="match_parent"
@@ -93,7 +95,9 @@
                 android:paddingRight="4dp"
                 tools:ignore="HardcodedText"
                 android:paddingStart="12dp"
-                android:paddingEnd="4dp" />
+                android:paddingEnd="4dp"
+                android:inputType="textCapWords"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -106,7 +110,9 @@
                 android:paddingRight="4dp"
                 tools:ignore="HardcodedText"
                 android:paddingStart="12dp"
-                android:paddingEnd="4dp" />
+                android:paddingEnd="4dp"
+                android:inputType="textCapWords"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
 
             <EditText
                 android:layout_width="match_parent"
@@ -120,7 +126,8 @@
                 android:paddingRight="4dp"
                 tools:ignore="HardcodedText"
                 android:paddingStart="12dp"
-                android:paddingEnd="4dp" />
+                android:paddingEnd="4dp"
+                android:digits="0123456789"/>
 
         </LinearLayout>
 

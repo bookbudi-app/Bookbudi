@@ -1,8 +1,9 @@
 package Adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,16 +46,17 @@ public class HomeOfferAdapter extends PagerAdapter {
 
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         assert layoutInflater != null;
-        View view = layoutInflater.inflate(R.layout.onboard_frag,container,false);
+        View view = layoutInflater.inflate(R.layout.bannerlayout,container,false);
 
-        ImageView slideImage = view.findViewById(R.id.offerImage);
+        ImageView bannerImage = view.findViewById(R.id.offerImage);
 
         HomeOffersModel model = banners.get(position);
 
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.openbook);
+        options.placeholder(R.color.offerImagePlaceholder);
 
-        Glide.with(context).load(model.getOffers()).apply(options).into(slideImage);
+            Glide.with(context).load(model.getOffers()).apply(options).into(bannerImage);
+
 
         container.addView(view);
 

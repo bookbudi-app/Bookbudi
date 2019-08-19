@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -16,7 +17,9 @@
         android:roundIcon="@drawable/roundlogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddPhone"></activity>
+        <activity android:name=".Faq"></activity>
+        <activity android:name=".MoreBooksByUser" />
+        <activity android:name=".AddPhone" />
         <activity android:name=".BookDetail" />
         <activity android:name=".Login" />
         <activity android:name=".BookForm" />
@@ -34,7 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

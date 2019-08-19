@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".Home"
     android:orientation="vertical"
     android:id="@+id/linearHome"
     android:paddingBottom="16dp"
-    android:layout_marginTop="10dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
     android:layout_marginBottom="50dp">
 
     <ProgressBar
@@ -21,24 +19,58 @@
         android:layout_centerInParent="true"/>
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:id="@+id/nobook"
         android:src="@drawable/nobook"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/refresh">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/refresh">
 
-        <android.support.v7.widget.RecyclerView
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll"
+        android:scrollbars="none"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recycle"/>
+            android:orientation="vertical">
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:id="@+id/homeOffers"/>
 
-    </RelativeLayout>
+      <!--  <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/indicator"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabBackground="@drawable/tab_selector"/>   -->
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:id="@+id/recycle"/>
+
+        </LinearLayout>
+
+      </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</RelativeLayout>
+
 

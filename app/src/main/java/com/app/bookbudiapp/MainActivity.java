@@ -3,16 +3,14 @@ package com.app.bookbudiapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.format.Time;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,21 +21,14 @@ import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.sdsmdg.tastytoast.TastyToast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,10 +38,14 @@ public class MainActivity extends AppCompatActivity {
     EditText search;
     Spinner chooseLocation;
 
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference dRef;
+
     Bundle bundle;
 
     ArrayList<String> list;
-    private static final String URL = "https://bookbudiapp.herokuapp.com/loadCity";
+   // private static final String URL = "https://bookbudiapp.herokuapp.com/loadCity";
+      private static final String URL = "https://bookbudi-prod.herokuapp.com/loadCity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        dRef = firebaseDatabase.getInstance().getReference();
 
         final ActionBar ab = getSupportActionBar();
         assert ab != null;
@@ -176,7 +173,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSpinner(){
 
-        OkHttpClient client  = new OkHttpClient.Builder()
+
+        dRef.child("Cities").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot areaSnapshot:dataSnapshot.getChildren()){
+                    String areaName = areaSnapshot.child("city").getValue(String.class);
+                    list.add(areaName);
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,R.layout.spinner_city,
+                        R.id.locaions,list);
+
+                chooseLocation.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                TastyToast.makeText(getApplicationContext(),"Unable to fetch locations",TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+            }
+        });
+
+     /*   OkHttpClient client  = new OkHttpClient.Builder()
                                .connectTimeout(22, TimeUnit.SECONDS)
                                .readTimeout(22, TimeUnit.SECONDS)
                                .writeTimeout(22,TimeUnit.SECONDS)
@@ -236,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
 
-        });
+        });  */
     }
 
     @Override

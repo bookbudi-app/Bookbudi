@@ -2,10 +2,10 @@ package com.app.bookbudiapp;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +46,9 @@ public class Tab1Fragment extends Fragment {
     FirebaseUser user;
     String userid;
 
-    private static final String URL = "https://bookbudiapp.herokuapp.com/loadWishlist";
+   // private static final String URL = "https://bookbudiapp.herokuapp.com/loadWishlist";
+
+    private static final String URL = "https://bookbudi-prod.herokuapp.com/loadWishlist";
 
     public Tab1Fragment() {
         // Required empty public constructor
