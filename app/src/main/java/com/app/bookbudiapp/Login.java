@@ -212,7 +212,7 @@ public class Login extends AppCompatActivity {
             }catch(ApiException e){
 
                 prg.hide();
-                TastyToast.makeText(getApplicationContext(),"Login failed",TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
+                TastyToast.makeText(getApplicationContext(),e.getMessage(),TastyToast.LENGTH_SHORT,TastyToast.ERROR).show();
             }
         }
     }

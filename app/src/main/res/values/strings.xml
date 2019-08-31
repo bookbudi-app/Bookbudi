@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Bookbudi</string>
     <string name="action_add">Add</string>
+    <string name="action_notify">Add</string>
 
     <string name="home">Home</string>
     <string name="mylibrary">My library</string>

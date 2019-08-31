@@ -73,8 +73,6 @@ public class Home extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-
         homeOffers = view.findViewById(R.id.homeOffers);
         prog = view.findViewById(R.id.progress2);
         nobook = view.findViewById(R.id.nobook);
@@ -92,7 +90,8 @@ public class Home extends Fragment {
 
         refresh.setColorSchemeResources(android.R.color.holo_green_dark,
                                          android.R.color.holo_orange_dark,
-                                         android.R.color.holo_blue_dark);
+                                         android.R.color.holo_blue_dark,
+                                          android.R.color.holo_red_dark);
 
         list = new ArrayList<>();
         banners = new ArrayList<>();
@@ -248,6 +247,7 @@ public class Home extends Fragment {
                                             if (jsonArray.length() == 0) {
 
                                                 nobook.setVisibility(View.VISIBLE);
+                                                homeOffers.setVisibility(View.GONE);
 
                                             }
 
@@ -433,6 +433,5 @@ public class Home extends Fragment {
         });
 
     }
-
 
 }

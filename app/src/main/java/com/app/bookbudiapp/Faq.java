@@ -92,9 +92,6 @@ public class Faq extends AppCompatActivity {
                                 String str1 = jsonObject.getString("Question");
                                 String str2 = jsonObject.getString("Answer");
 
-                                Log.d("Question",str1);
-                                Log.d("Answer",str2);
-
                                 FaqModel model = new FaqModel(str1,str2);
 
                                 faqList.add(model);

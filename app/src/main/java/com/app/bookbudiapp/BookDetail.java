@@ -15,9 +15,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -53,7 +61,7 @@ public class BookDetail extends AppCompatActivity {
     private static final String WISHLIST_URI = "https://bookbudi-prod.herokuapp.com/checkWishlist";
     private static final String ADD_TO_WISHLIST_URL = "https://bookbudi-prod.herokuapp.com/addtoWishlist";
     private static final String REMOVE_FROM_WISHLIST = "https://bookbudi-prod.herokuapp.com/removeFromWishlist";
-    private static final String PHONE_CALL = "https://bookbudi-prod.herokupp.com/getPhone";
+    private static final String PHONE_CALL = "https://bookbudi-prod.herokuapp.com/getPhone";
 
     TextView detailBookName,detailBookSubject,detailClass,detailPrice,moreByUser,name,detailBookCity;
     ImageView detailBookImage;
@@ -72,11 +80,19 @@ public class BookDetail extends AppCompatActivity {
 
     String str,strbImage,strbName,strbSub,strbClass,userid,uid;
 
+    AdView adView;
+    AdRequest adRequest;
+
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
+
+        adView = findViewById(R.id.adView);
+
+        adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         ActionBar ab = getSupportActionBar();
         assert ab != null;
@@ -126,6 +142,7 @@ public class BookDetail extends AppCompatActivity {
         userDetail.setVisibility(View.INVISIBLE);
         disclaimer.setVisibility(View.INVISIBLE);
         callButton.setVisibility(View.INVISIBLE);
+        adView.setVisibility(View.INVISIBLE);
 
        // chat.setVisibility(View.GONE);
 
@@ -141,28 +158,20 @@ public class BookDetail extends AppCompatActivity {
              @Override
              public void onClick(View v) {
 
-                 dRef = firData.getInstance().getReference();
-
-                 HashMap<String,String> map = new HashMap<String,String>();
-
-                 map.put("Caller",user.getUid());
-                 map.put("Call_to",uid);
-                 map.put("Book_image",strbImage);
-                 map.put("Book_name",strbName);
-                 map.put("Subject",strbSub);
-                 map.put("Class",strbClass);
-
-                 dRef.child("Callings").push().setValue(map);
-
-                 if(!user.getUid().equals(uid)){
-
                      calling(uid);
-                     callButton.setVisibility(View.VISIBLE);
 
-                 }else{
+                     dRef = firData.getInstance().getReference();
 
-                     callButton.setVisibility(View.INVISIBLE);
-                 }
+                     HashMap<String,String> map = new HashMap<String,String>();
+
+                     map.put("Caller",user.getUid());
+                     map.put("Call_to",uid);
+                     map.put("Book_image",strbImage);
+                     map.put("Book_name",strbName);
+                     map.put("Subject",strbSub);
+                     map.put("Class",strbClass);
+
+                     dRef.child("Callings").push().setValue(map);
 
              }
          });
@@ -237,6 +246,7 @@ public class BookDetail extends AppCompatActivity {
                             userDetail.setVisibility(View.VISIBLE);
                             disclaimer.setVisibility(View.VISIBLE);
                             callButton.setVisibility(View.VISIBLE);
+                            adView.setVisibility(View.VISIBLE);
                             // chat.setVisibility(View.VISIBLE);
 
                             JSONArray jsonArray = new JSONArray(response.body().string());
@@ -505,6 +515,7 @@ public class BookDetail extends AppCompatActivity {
 
         final ProgressDialog prg= new ProgressDialog(BookDetail.this);
         prg.setMessage("Getting number...");
+        prg.setCancelable(false);
         prg.show();
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -573,5 +584,33 @@ public class BookDetail extends AppCompatActivity {
           Intent i = new Intent(BookDetail.this,MainActivity.class);
           startActivity(i);
           finish();
+    }
+
+    /** Called when leaving the activity */
+    @Override
+    public void onPause() {
+        if (adView != null) {
+            adView.pause();
+        }
+        super.onPause();
+    }
+
+    /** Called when returning to the activity */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    /** Called before the activity is destroyed */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (adView != null) {
+            adView.destroy();
+        }
     }
 }

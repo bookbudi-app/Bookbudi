@@ -48,7 +48,9 @@
                 android:text=""
                 android:paddingLeft="20dp"
                 android:textSize="16sp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:paddingStart="20dp"
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
 
@@ -57,9 +59,66 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:id="@+id/updateCard"
+        android:layout_below="@id/card1"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="3dp"
+        app:cardBackgroundColor="#00e676"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="3dp"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Update an app to the latest version."
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+
+            <Button
+                android:id="@+id/update"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:background="@drawable/update_button"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="UPDATE"
+                android:textColor="#fff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:ignore="HardcodedText" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/card2"
-        android:layout_below="@+id/card1"
+        android:layout_below="@+id/updateCard"
         android:layout_marginTop="20dp"
         app:cardUseCompatPadding="true">
 
@@ -203,11 +262,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/logOut"
+            android:id="@+id/appVersion"
             android:layout_marginTop="10dp"
             android:textColor="#adadad"
             android:layout_marginBottom="55dp"
             android:gravity="center_horizontal"
-            android:text="App Version:0.1"
             tools:ignore="HardcodedText" />
 
   <!--  </RelativeLayout>   -->
@@ -215,6 +274,5 @@
         </RelativeLayout>
 
     </ScrollView>
-
 
 </RelativeLayout>

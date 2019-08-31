@@ -124,11 +124,25 @@
 
             </androidx.cardview.widget.CardView>
 
+           <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/adView"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_below="@+id/card_nam_sub"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-1218708258118994/2111525422">
+
+            </com.google.android.gms.ads.AdView>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/card_class_prc"
-                android:layout_below="@+id/card_nam_sub"
+                android:layout_below="@+id/adView"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginLeft="16dp"

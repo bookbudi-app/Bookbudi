@@ -16,13 +16,15 @@ import com.app.bookbudiapp.BookDetail;
 import com.app.bookbudiapp.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 
 import java.util.ArrayList;
 
 import Models.LoadHomeBooks;
 
-/*public class HomeBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+/* public class HomeBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static final int LAYOUT_ADS= 0;
     private static final int LAYOUT_BOOKS= 1;
@@ -30,7 +32,7 @@ import Models.LoadHomeBooks;
     private ArrayList<LoadHomeBooks> list;
     private Context context;
 
-    VideoController mVideoController;
+    AdRequest adRequest;
 
     public HomeBookAdapter(ArrayList<LoadHomeBooks> list,Context context){
 
@@ -41,14 +43,13 @@ import Models.LoadHomeBooks;
     @Override
     public int getItemViewType(int position) {
 
-        if((position % 2) == 0){
+        if(!(position == 0) && position % 2 == 0){
 
             return LAYOUT_ADS;
         }else{
 
             return LAYOUT_BOOKS;
         }
-
     }
 
     @NonNull
@@ -80,33 +81,10 @@ import Models.LoadHomeBooks;
 
             AdViewHolder adHolder = (AdViewHolder)holder;
 
-            adHolder.mAdView.setAdUnitId("ca-app-pub-1218708258118994/3329063313");
-            adHolder.mAdView.setAdSize(new AdSize(AdSize.FULL_WIDTH, 200));
+            adRequest = new AdRequest.Builder().build();
+            adHolder.mAdView.loadAd(adRequest);
 
-            adHolder.mAdView.setVideoOptions(new VideoOptions.Builder().setStartMuted(true).build());
 
-            mVideoController = ((AdViewHolder) holder).mAdView.getVideoController();
-
-            mVideoController.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
-                @Override
-                public void onVideoEnd() {
-                    super.onVideoEnd();
-                }
-            });
-
-            ((AdViewHolder) holder).mAdView.setAdListener(new AdListener(){
-
-                @Override
-                public void onAdLoaded() {
-                    if(mVideoController.hasVideoContent()){
-
-                    }else{
-
-                    }
-                }
-            });
-
-            ((AdViewHolder) holder).mAdView.loadAd(new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build());
 
         }else{
 
@@ -159,7 +137,7 @@ import Models.LoadHomeBooks;
 
     public class AdViewHolder extends RecyclerView.ViewHolder {
 
-        NativeExpressAdView mAdView;
+        AdView mAdView;
 
         public AdViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -193,7 +171,7 @@ import Models.LoadHomeBooks;
         notifyDataSetChanged();
 
     }
-}  */
+}   */
 
 
 
@@ -203,7 +181,8 @@ import Models.LoadHomeBooks;
  * Original code
  */
 
-public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHolder> {
+
+  public class HomeBookAdapter extends RecyclerView.Adapter<HomeBookAdapter.ViewHolder> {
 
     private ArrayList<LoadHomeBooks> list;
     private Context context;

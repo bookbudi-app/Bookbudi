@@ -17,7 +17,7 @@
         android:roundIcon="@drawable/roundlogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Faq"></activity>
+        <activity android:name=".Faq" />
         <activity android:name=".MoreBooksByUser" />
         <activity android:name=".AddPhone" />
         <activity android:name=".BookDetail" />
@@ -37,6 +37,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1218708258118994~6078465910" />
+
     </application>
 
 </manifest>
